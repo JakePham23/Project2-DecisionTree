@@ -1,0 +1,5 @@
+https://www.kaggle.com/datasets/redwankarimsony/heart-disease-data
+
+https://github.com/allisonhorst/palmerpenguins
+
+https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data
