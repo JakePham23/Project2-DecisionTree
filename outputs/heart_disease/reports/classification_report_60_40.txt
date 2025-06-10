@@ -1,0 +1,9 @@
+=== Classification Report (60/40) ===
+              precision    recall  f1-score   support
+
+  No Disease       0.81      0.85      0.83       164
+     Disease       0.87      0.84      0.85       204
+
+    accuracy                           0.84       368
+   macro avg       0.84      0.84      0.84       368
+weighted avg       0.84      0.84      0.84       368

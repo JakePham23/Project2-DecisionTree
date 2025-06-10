@@ -21,7 +21,9 @@ def plot_label_original(labels, output_path):
 
     plt.tight_layout()
     output_filename = f"class_original.png"
-        
+    output_path = output_path + "charts/"
+    # Tạo thư mục nếu chưa tồn tại
+    os.makedirs(output_path, exist_ok=True)
     save_path = os.path.join(output_path, output_filename)
     plt.savefig(save_path)
     plt.close()
@@ -49,14 +51,17 @@ def plot_label_distribution(label_train, label_test, train_size, test_size, outp
 
     plt.tight_layout()
     output_filename = f"class_distribution_{int(train_size)}_{int(test_size)}.png"
-        
+    output_path = output_path + "charts/"    
+    # Tạo thư mục nếu chưa tồn tại
+    os.makedirs(output_path, exist_ok=True)
     save_path = os.path.join(output_path, output_filename)
     plt.savefig(save_path)
     plt.close()
 
     print(f"Biểu đồ đã được lưu tại: {save_path}")
 
-def build_decision_tree(features_final, feature_train, feature_test, label_train, label_test, train_size, test_size, output_path):
+def build_decision_tree(features_final, feature_train, feature_test, label_train,
+                         label_test, train_size, test_size, output_path):
     # Khởi tạo mô hình Cây quyết định với tiêu chí entropy
     clf = DecisionTreeClassifier(criterion='entropy', random_state=42)
 
@@ -72,14 +77,22 @@ def build_decision_tree(features_final, feature_train, feature_test, label_train
 
     # Dùng graphviz để hiển thị
     graph = graphviz.Source(dot_data)
-    graph.render(f"{output_path}/decision_tree_{train_size}_{test_size}")  # thay đổi theo tỷ lệ
+    # Tạo thư mục nếu chưa tồn tại
+    output_path_dot = output_path + "dots/"
+    os.makedirs(output_path_dot, exist_ok=True)
+    graph.render(f"{output_path_dot}decision_tree_{train_size}_{test_size}")  # thay đổi theo tỷ lệ
 
     # Dự đoán trên tập test
     label_pred = clf.predict(feature_test)
 
     # Classification report
-    print(f"=== Classification Report ({train_size}/{test_size}) ===")
-    print(classification_report(label_test, label_pred, target_names=["No Disease", "Disease"]))
+    report = classification_report(label_test, label_pred, target_names=["No Disease", "Disease"])
+    # Tạo thư mục nếu chưa tồn tại
+    output_path_report = output_path + "reports/"
+    os.makedirs(output_path_report, exist_ok=True)
+    with open(f"{output_path_report}/classification_report_{train_size}_{test_size}.txt", "w") as f:
+        f.write(f"=== Classification Report ({train_size}/{test_size}) ===\n")
+        f.write(report)
 
     # Tạo confusion matrix
     cm = confusion_matrix(label_test, label_pred)
@@ -96,8 +109,11 @@ def build_decision_tree(features_final, feature_train, feature_test, label_train
     plt.tight_layout()
 
     # Lưu hình vào thư mục output
-    conf_matrix_path = os.path.join(output_path, f'confusion_matrix_({train_size}_{test_size}).png')
+    # Tạo thư mục nếu chưa tồn tại
+    output_path_matrix = output_path + "matrices/"
+    os.makedirs(output_path_matrix, exist_ok=True)
+    conf_matrix_path = os.path.join(output_path_matrix, f'confusion_matrix_{train_size}_{test_size}.png')
     plt.savefig(conf_matrix_path)
-    plt.show()
+    plt.close()
 
     print(f"Confusion matrix đã được lưu tại: {conf_matrix_path}")
