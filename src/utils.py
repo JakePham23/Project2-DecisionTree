@@ -78,7 +78,7 @@ def build_decision_tree(features_final, feature_train, feature_test, label_train
     # Dùng graphviz để hiển thị
     graph = graphviz.Source(dot_data)
     # Tạo thư mục nếu chưa tồn tại
-    output_path_dot = output_path + "dots/"
+    output_path_dot = output_path + "trees/"
     os.makedirs(output_path_dot, exist_ok=True)
     graph.render(f"{output_path_dot}decision_tree_{train_size}_{test_size}")  # thay đổi theo tỷ lệ
 
@@ -103,9 +103,9 @@ def build_decision_tree(features_final, feature_train, feature_test, label_train
                 xticklabels=['No Disease', 'Disease'],
                 yticklabels=['No Disease', 'Disease'])
 
-    plt.xlabel('Predicted')
-    plt.ylabel('Actual')
-    plt.title(f'Confusion Matrix ({train_size}/{test_size})')
+    plt.xlabel('Predicted Label')
+    plt.ylabel('True Label')
+    plt.title(f'Confusion Matrix (Depth={clf.tree_.max_depth}, {train_size}/{test_size} Split)')
     plt.tight_layout()
 
     # Lưu hình vào thư mục output
