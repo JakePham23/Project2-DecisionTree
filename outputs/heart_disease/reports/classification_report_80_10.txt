@@ -1,4 +1,4 @@
-=== Classification Report (90/10) ===
+=== Classification Report (80/10) ===
               precision    recall  f1-score   support
 
   No Disease       0.83      0.83      0.83        41

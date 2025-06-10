@@ -60,8 +60,7 @@ def plot_label_distribution(label_train, label_test, train_size, test_size, outp
 
     print(f"Biểu đồ đã được lưu tại: {save_path}")
 
-def build_decision_tree(features_final, feature_train, feature_test, label_train,
-                         label_test, train_size, test_size, output_path):
+def build_decision_tree(features_final, feature_train, label_train, train_size, test_size, output_path):
     # Khởi tạo mô hình Cây quyết định với tiêu chí entropy
     clf = DecisionTreeClassifier(criterion='entropy', random_state=42)
 
@@ -80,20 +79,24 @@ def build_decision_tree(features_final, feature_train, feature_test, label_train
     # Tạo thư mục nếu chưa tồn tại
     output_path_dot = output_path + "trees/"
     os.makedirs(output_path_dot, exist_ok=True)
-    graph.render(f"{output_path_dot}decision_tree_{train_size}_{test_size}")  # thay đổi theo tỷ lệ
+    graph.render(f"{output_path_dot}decision_tree_{train_size}_{test_size}")
+    print(f"Đã tạo decision tree tại {output_path_dot}decision_tree_{train_size}_{test_size}")
+    return clf
 
+def evaluating_decision_tree_class(clf, feature_test, label_test, train_size, test_size, output_path):
     # Dự đoán trên tập test
     label_pred = clf.predict(feature_test)
 
     # Classification report
     report = classification_report(label_test, label_pred, target_names=["No Disease", "Disease"])
+
     # Tạo thư mục nếu chưa tồn tại
     output_path_report = output_path + "reports/"
     os.makedirs(output_path_report, exist_ok=True)
     with open(f"{output_path_report}/classification_report_{train_size}_{test_size}.txt", "w") as f:
         f.write(f"=== Classification Report ({train_size}/{test_size}) ===\n")
         f.write(report)
-
+    print(f"Classification Report ({train_size}/{test_size}) đã được lưu tại: {output_path_report}/classification_report_{train_size}_{test_size}.txt")
     # Tạo confusion matrix
     cm = confusion_matrix(label_test, label_pred)
 
@@ -116,4 +119,4 @@ def build_decision_tree(features_final, feature_train, feature_test, label_train
     plt.savefig(conf_matrix_path)
     plt.close()
 
-    print(f"Confusion matrix đã được lưu tại: {conf_matrix_path}")
+    print(f"Confusion Matrix (Depth={clf.tree_.max_depth}, {train_size}/{test_size} Split) đã được lưu tại: {conf_matrix_path}")
