@@ -120,3 +120,75 @@ def evaluating_decision_tree_class(clf, feature_test, label_test, train_size, te
     plt.close()
 
     print(f"Confusion Matrix (Depth={clf.tree_.max_depth}, {train_size}/{test_size} Split) đã được lưu tại: {conf_matrix_path}")
+
+def build_decision_tree_penguins(features_final, feature_train, label_train, train_size, test_size, output_path):
+     # 1. Khởi tạo và huấn luyện
+    clf = DecisionTreeClassifier(criterion='entropy', random_state=42)
+    clf.fit(feature_train, label_train)
+
+    # 2. Tạo danh sách tên lớp động
+    cls_names = [str(c) for c in clf.classes_]
+
+    # 3. Xuất .dot
+    dot_data = export_graphviz(
+        clf,
+        out_file=None,
+        feature_names=features_final.columns,
+        class_names=cls_names,
+        filled=True,
+        rounded=True,
+        special_characters=True
+    )
+
+    # 4. Hiển thị và lưu ảnh
+    graph = graphviz.Source(dot_data)
+    output_path_dot = os.path.join(output_path, "trees")
+    os.makedirs(output_path_dot, exist_ok=True)
+    graph.render(
+        filename=f"decision_tree_{train_size}_{test_size}",
+        directory=output_path_dot,
+        format="png",
+        cleanup=True
+    )
+    print(f"Đã tạo decision tree tại {os.path.join(output_path_dot, f'decision_tree_{train_size}_{test_size}.png')}")
+
+    # 5. Trả về mô hình
+    return clf
+
+def evaluating_decision_tree_class_penguins(clf, feature_test, label_test, train_size, test_size, output_path):
+    # Predict
+    label_pred = clf.predict(feature_test)
+
+    # Get class names
+    classes = sorted(label_test.unique())
+
+    # Classification report
+    report = classification_report(label_test, label_pred, target_names=classes)
+
+    # Save report
+    output_path_report = os.path.join(output_path, "reports")
+    os.makedirs(output_path_report, exist_ok=True)
+    with open(os.path.join(output_path_report, f"classification_report_{train_size}_{test_size}.txt"), "w") as f:
+        f.write(f"=== Classification Report ({train_size}/{test_size}) ===\n")
+        f.write(report)
+
+    print(f"Classification report saved: {output_path_report}/classification_report_{train_size}_{test_size}.txt")
+
+    # Confusion matrix
+    cm = confusion_matrix(label_test, label_pred)
+    plt.figure(figsize=(6, 4))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                xticklabels=classes,
+                yticklabels=classes)
+    plt.xlabel("Predicted Label")
+    plt.ylabel("True Label")
+    plt.title(f"Confusion Matrix ({train_size}/{test_size})")
+    plt.tight_layout()
+
+    # Save matrix
+    output_path_matrix = os.path.join(output_path, "matrices")
+    os.makedirs(output_path_matrix, exist_ok=True)
+    matrix_path = os.path.join(output_path_matrix, f"confusion_matrix_{train_size}_{test_size}.png")
+    plt.savefig(matrix_path)
+    plt.close()
+    print(f"Confusion matrix saved: {matrix_path}")
