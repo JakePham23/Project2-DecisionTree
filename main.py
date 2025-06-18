@@ -1,6 +1,6 @@
 import kagglehub
+import pandas as pd
 
-# Download latest version
-path = kagglehub.dataset_download("./data/heart_disease.csv")
+df = pd.read_csv("./data/heart_disease.csv")
 
-print("Path to dataset files:", path)
+print(df)
