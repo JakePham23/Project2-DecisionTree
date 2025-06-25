@@ -1,0 +1,10 @@
+=== Classification Report (60/40) ===
+              precision    recall  f1-score   support
+
+      Adelie       1.00      0.98      0.99        61
+   Chinstrap       0.90      1.00      0.95        27
+      Gentoo       1.00      0.96      0.98        50
+
+    accuracy                           0.98       138
+   macro avg       0.97      0.98      0.97       138
+weighted avg       0.98      0.98      0.98       138
