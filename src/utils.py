@@ -1,6 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 import seaborn as sns
+from IPython.display import display
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from sklearn.tree import export_graphviz
@@ -26,9 +27,8 @@ def plot_label_original(labels, output_path):
     os.makedirs(output_path, exist_ok=True)
     save_path = os.path.join(output_path, output_filename)
     plt.savefig(save_path)
-    plt.close()
-
-    print(f"Biểu đồ đã được lưu tại: {save_path}")
+    print("Class original:")
+    plt.show()
 
 def plot_label_distribution(label_train, label_test, train_size, test_size, output_path):
     # Đếm số lượng mỗi class trong tập train và test
@@ -56,9 +56,8 @@ def plot_label_distribution(label_train, label_test, train_size, test_size, outp
     os.makedirs(output_path, exist_ok=True)
     save_path = os.path.join(output_path, output_filename)
     plt.savefig(save_path)
-    plt.close()
-
-    print(f"Biểu đồ đã được lưu tại: {save_path}")
+    print(f"Class distribution ({int(train_size)}/{int(test_size)})")
+    plt.show()
 
 def build_decision_tree(features_final, feature_train, label_train, train_size, test_size, output_path):
     # Khởi tạo mô hình Cây quyết định với tiêu chí entropy
@@ -80,7 +79,8 @@ def build_decision_tree(features_final, feature_train, label_train, train_size, 
     output_path_dot = output_path + "trees/"
     os.makedirs(output_path_dot, exist_ok=True)
     graph.render(f"{output_path_dot}decision_tree_{train_size}_{test_size}")
-    print(f"Đã tạo decision tree tại {output_path_dot}decision_tree_{train_size}_{test_size}")
+    print(f"Decision tree {train_size}/{test_size}")
+    display(graph)
     return clf
 
 def evaluating_decision_tree_class(clf, feature_test, label_test, train_size, test_size, output_path):
@@ -94,7 +94,6 @@ def evaluating_decision_tree_class(clf, feature_test, label_test, train_size, te
     output_path_report = output_path + "reports/"
     os.makedirs(output_path_report, exist_ok=True)
     with open(f"{output_path_report}/classification_report_{train_size}_{test_size}.txt", "w") as f:
-        f.write(f"=== Classification Report ({train_size}/{test_size}) ===\n")
         f.write(report)
     print(f"Classification Report ({train_size}/{test_size}) đã được lưu tại: {output_path_report}/classification_report_{train_size}_{test_size}.txt")
     # Tạo confusion matrix
@@ -117,9 +116,8 @@ def evaluating_decision_tree_class(clf, feature_test, label_test, train_size, te
     os.makedirs(output_path_matrix, exist_ok=True)
     conf_matrix_path = os.path.join(output_path_matrix, f'confusion_matrix_{train_size}_{test_size}.png')
     plt.savefig(conf_matrix_path)
-    plt.close()
-
-    print(f"Confusion Matrix (Depth={clf.tree_.max_depth}, {train_size}/{test_size} Split) đã được lưu tại: {conf_matrix_path}")
+    print(f"Confusion Matrix (Depth={clf.tree_.max_depth}, {train_size}/{test_size} Split)")
+    plt.show()
 
 def build_decision_tree_penguins(features_final, feature_train, label_train, train_size, test_size, output_path):
      # 1. Khởi tạo và huấn luyện
