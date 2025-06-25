@@ -116,9 +116,8 @@ def evaluating_decision_tree_class(clf, feature_test, label_test, train_size, te
     os.makedirs(output_path_matrix, exist_ok=True)
     conf_matrix_path = os.path.join(output_path_matrix, f'confusion_matrix_{train_size}_{test_size}.png')
     plt.savefig(conf_matrix_path)
-    plt.close()
-
-    print(f"Confusion Matrix (Depth={clf.tree_.max_depth}, {train_size}/{test_size} Split) đã được lưu tại: {conf_matrix_path}")
+    print(f"Confusion Matrix (Depth={clf.tree_.max_depth}, {train_size}/{test_size} Split)")
+    plt.show()
 
 def build_decision_tree_penguins(features_final, feature_train, label_train, train_size, test_size, output_path):
      # 1. Khởi tạo và huấn luyện
